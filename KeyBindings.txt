@@ -3,3 +3,4 @@ Z - Free mouse from camera
 X - Lock mouse to camera
 C - Toggle ScaleHuman model
 L - Delete cache (needed if u made changes to a model without using a new name for it)
++ / - - Change camera speed
