@@ -4,3 +4,7 @@ X - Lock mouse to camera
 C - Toggle ScaleHuman model
 L - Delete cache (needed if u made changes to a model without using a new name for it)
 + / - - Change camera speed
+Arrow keys - Change direction of sun-light
+1 - Enable light on camera
+T - increase camera-light intensity
+Y - decrease camera-light intensity
