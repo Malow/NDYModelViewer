@@ -83,7 +83,7 @@ RTs:
 //-----------------------------------------------------------------------------------------
 RasterizerState Culling
 {
-	CullMode = NONE;
+	CullMode = Back;
 };
 
 DepthStencilState EnableDepth
