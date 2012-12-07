@@ -8,3 +8,5 @@ Arrow keys - Change direction of sun-light
 1 - Enable light on camera
 T - increase camera-light intensity
 Y - decrease camera-light intensity
+B - increase ambient light
+N - decrease ambient light
