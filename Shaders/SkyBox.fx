@@ -1,8 +1,16 @@
-
+//------------------------------------------------------------------------------------------------------
+//	Modified by Markus Tillman at Blekinga Tekniska Högskola for project "Not dead yet".
+//
+//	Rendering: Skybox.
+//	Renders a skybox using spheremapping.
+//------------------------------------------------------------------------------------------------------
 
 cbuffer EveryFrame
 {
 	matrix gWVP;
+	matrix world;
+	float FogHeight;
+	float CamY;
 }
 
 TextureCube SkyMap;
@@ -15,16 +23,17 @@ struct VSIn
 struct SKYMAP_VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;
+	float3 worldPos : POSITION;
 	float3 texCoord : TEXCOORD; //(pos)
 };
-
-struct PSout
+/*
+struct PSOut
 {
 	float4 Texture : SV_TARGET0;
 	float4 NormalAndDepth : SV_TARGET1;
 	float4 Position : SV_TARGET2;
 	float4 Specular : SV_TARGET3;
-};
+};*/
 
 RasterizerState RastDesc
 {
@@ -53,12 +62,30 @@ SKYMAP_VS_OUTPUT SKYMAP_VS(VSIn input)
 	//Set Pos to xyww instead of xyzw, so that z/w will always be 1 (furthest from camera)
 	output.Pos = mul(float4(input.Pos, 1.0f), gWVP).xyww; 
 	output.texCoord = input.Pos;
+	output.worldPos = mul(float4(input.Pos, 1.0f), world);
 
 	return output;
 }
+//PSOut SKYMAP_PS(SKYMAP_VS_OUTPUT input) : SV_Target
 float4 SKYMAP_PS(SKYMAP_VS_OUTPUT input) : SV_Target
 {
-	return SkyMap.Sample(linearSampler, input.texCoord);
+	float4 ret = ret = SkyMap.Sample(linearSampler, input.texCoord);
+	if(input.worldPos.y < FogHeight)
+	{
+		float factor = (input.worldPos.y - CamY) / (FogHeight - CamY);
+
+		ret = lerp(float4(0.45f, 0.45f, 0.45f, 1.0f), ret, saturate(factor));
+	}
+	return ret;
+
+	/*PSOut output = (PSOut)0;
+
+	output.Texture = SkyMap.Sample(linearSampler, input.texCoord);
+	output.NormalAndDepth = float4(0,0,0,-1);
+	output.Position = float4(0,0,0,0);
+	output.Specular = float4(0,0,0,0);
+
+	return output;*/
 }
 
 technique11 BasicTech
